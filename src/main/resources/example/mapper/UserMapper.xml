@@ -20,7 +20,7 @@
     </insert>
 
     <!--TODO  为什么mapper.java对应的参数不能是拆开的，要对象-->
-    <update id="updateUser">
+    <update id="updateUser">insertUser
         update tb_user set user_name=#{user_name,jdbcType=VARCHAR}
         where id=#{user_id,jdbcType=INTEGER}
     </update>
