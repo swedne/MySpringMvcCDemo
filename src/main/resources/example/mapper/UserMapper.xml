@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="example.mapper.UserMapper">
+
+    <resultMap type="User" id="userResult">
+        <id property="user_id" column="id"/>
+        <result property="user_name" column="user_name"/>
+        <result property="user_age" column="user_age"/>
+    </resultMap>
+
+    <!-- 根据主键id查询用户 -->
+    <select id="queryUserById" parameterType="String" resultType="User" resultMap="userResult">
+        select * from tb_user where id=#{id}
+    </select>
+
+    <!--values的key要和实体类映射-->
+    <insert id="insertUser">
+        insert into tb_user (id,user_name,user_age)
+        values (#{user_id,jdbcType=INTEGER}, #{user_name,jdbcType=VARCHAR},#{user_age,jdbcType=VARCHAR})
+    </insert>
+
+    <!--TODO  为什么mapper.java对应的参数不能是拆开的，要对象-->
+    <update id="updateUser">
+        update tb_user set user_name=#{user_name,jdbcType=VARCHAR}
+        where id=#{user_id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteUser">
+        delete  FROM tb_user where id=#{id,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>
