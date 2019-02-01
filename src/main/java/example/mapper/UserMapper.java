@@ -2,6 +2,7 @@ package example.mapper;
 
 import example.entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
