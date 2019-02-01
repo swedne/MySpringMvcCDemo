@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,17 +33,18 @@ public class StudentServelet {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = "/getAllStudent", method = RequestMethod.GET)
-    public void getAllStudent(@RequestParam(value = "age", required = true) String age, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
+    public void getAllStudent(HttpServletRequest request, HttpServletResponse response) {
         ListObject listObject = new ListObject();
-        ArrayList<String> strings = new ArrayList<String>();
-        strings.add("1");
-        strings.add(age);
-        strings.add("3");
-        strings.add("4");
-        listObject.setItems((strings));
-        listObject.setCode(StatusCode.CODE_SUCCESS);
-        listObject.setMsg("请求成功");
+        List<User> users = userService.getAllUsers();
+        listObject.setItems((users));
+        if (response.getStatus() == StatusCode.CODE_SUCCESS) {
+            listObject.setCode(StatusCode.CODE_SUCCESS);
+            listObject.setMsg("请求成功");
+        } else {
+            listObject.setCode(StatusCode.CODE_FAIL);
+            listObject.setMsg("请求失败");
+        }
         ResponseUtils.renderJson(response, JackJsonUtils.toJson(listObject));
     }
 

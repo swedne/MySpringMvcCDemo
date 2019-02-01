@@ -8,6 +8,10 @@
         <result property="user_age" column="user_age"/>
     </resultMap>
 
+    <!-- 获取所有学生信息 -->
+    <select id="getAllUsers" resultType="User" resultMap="userResult">
+        select * from tb_user
+    </select>
     <!-- 根据主键id查询用户 -->
     <select id="queryUserById" parameterType="String" resultType="User" resultMap="userResult">
         select * from tb_user where id=#{id}

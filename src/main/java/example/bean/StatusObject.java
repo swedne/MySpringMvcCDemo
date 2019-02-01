@@ -5,22 +5,22 @@ package example.bean;
  */
 public class StatusObject {
     // 状态码
-    private String code;
+    private int code;
 
     // 状态信息
     private String msg;
 
-    public StatusObject(String code, String msg) {
+    public StatusObject(int code, String msg) {
         super();
         this.code = code;
         this.msg = msg;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

@@ -34,4 +34,8 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteUser(id);
     }
 
+    public List<User> getAllUsers() {
+        return userMapper.getAllUsers();
+    }
+
 }

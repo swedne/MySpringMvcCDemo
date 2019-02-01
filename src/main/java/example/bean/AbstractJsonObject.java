@@ -4,17 +4,17 @@ import java.util.Date;
 
 public class AbstractJsonObject {
     //code
-    private String code;
+    private int code;
     //msg
     private String msg;
 
     private Long time = new Date().getTime();
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
@@ -40,7 +40,7 @@ public class AbstractJsonObject {
         this.msg = msg;
     }
 
-    public void setContent(String code, String msg) {
+    public void setContent(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
