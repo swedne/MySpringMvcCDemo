@@ -4,6 +4,33 @@ public class User {
     private String user_name;
     private String user_id;
     private String user_age;
+    private String phone;
+    private String password;
+    private String token;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getUser_id() {
         return user_id;

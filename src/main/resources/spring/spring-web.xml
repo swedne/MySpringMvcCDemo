@@ -1,37 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd
+	 http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop.xsd
 	http://www.springframework.org/schema/mvc
-	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
-	<!-- 配置SpringMVC -->
-	<!-- 1.开启SpringMVC注解模式 -->
-	<!-- 简化配置： 
-		(1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter 
-		(2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持 
-	-->
-	<mvc:annotation-driven />
-	
-	<!-- 2.静态资源默认servlet配置
-		(1)加入对静态资源的处理：js,gif,png
-		(2)允许使用"/"做整体映射
-	 -->
-	 <mvc:default-servlet-handler/>
-	 
-	 <!-- 3.配置jsp 显示ViewResolver -->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<!-- 配置jsp路径的前缀 -->
-		<property name="prefix" value="/WEB-INF/view/"/>
-		<!-- 配置jsp路径的后缀 -->
-		<property name="suffix" value=".jsp"/>
-	</bean>
-	 
-	 <!-- 4.扫描web相关的bean -->
-	 <context:component-scan base-package="example.controller" />
-	 <context:component-scan base-package="example.action" />
+	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
+
+>
+    <!-- 配置SpringMVC -->
+    <!-- 1.开启SpringMVC注解模式 -->
+    <!-- 简化配置：
+        (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter
+        (2)提供一些列：数据绑定，数字和日期的format @NumberFormat, @DateTimeFormat, xml,json默认读写支持
+    -->
+    <mvc:annotation-driven/>
+
+    <!-- 2.静态资源默认servlet配置
+        (1)加入对静态资源的处理：js,gif,png
+        (2)允许使用"/"做整体映射
+     -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 3.配置jsp 显示ViewResolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 配置jsp路径的前缀 -->
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <!-- 配置jsp路径的后缀 -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 4.扫描web相关的bean -->
+    <context:component-scan base-package="example.controller"/>
+    <context:component-scan base-package="example.action"/>
+
+
+    <!--拦截器 -->
+    <mvc:interceptors>
+        <!--多个拦截器,顺序执行 -->
+        <!-- TOKEN认证拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="example.interceptor.TokenInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+    <!-- service -->
+    <bean id="serviceAspect" class="example.aop.ServiceAspect"/>
+    <!-- AOP配置 -->
+    <!--execution(modifiers-pattern? ret-type-pattern declaring-type-pattern? name-pattern(param-pattern) throws-pattern?)
+modifiers-pattern：方法的操作权限
+ret-type-pattern：返回值
+declaring-type-pattern：方法所在的包
+name-pattern：方法名
+parm-pattern：参数名
+throws-pattern：异常
+其中，除ret-type-pattern和name-pattern之外，其他都是可选的。
+eg:execution(* com.spring.service.*.*(..))表示com.spring.service包下，返回值为任意类型；方法名任意；参数不作限制的所有方法。-->
+    <aop:config>
+        <!-- 声明一个切面,并注入切面Bean,相当于@Aspect -->
+        <aop:aspect id="simpleAspect" ref="serviceAspect">
+            <!-- 配置一个切入点,相当于@Pointcut -->
+            <aop:pointcut
+                    expression="execution(* example.action..*(javax.servlet.http.HttpServletResponse))and args(response)"
+                    id="simplePointcut"/>
+            <!-- 配置通知,相当于@Before、@After、@AfterReturn、@Around、@AfterThrowing -->
+            <aop:after pointcut-ref="simplePointcut" method="logRespond"/>
+            <!--<aop:after pointcut-ref="simplePointcut" method="after"/>-->
+            <!--<aop:after-returning pointcut-ref="simplePointcut" method="afterReturn"/>-->
+            <!--<aop:after-throwing pointcut-ref="simplePointcut" method="afterThrow" throwing="ex"/>-->
+        </aop:aspect>
+    </aop:config>
+
 </beans>

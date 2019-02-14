@@ -3,7 +3,6 @@ package example.service.impl;
 import example.entity.User;
 import example.mapper.UserMapper;
 import example.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -22,8 +21,13 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    public User queryUserByPhone(String phone) {
+        User user = userMapper.queryUserByPhone(phone);
+        return user;
+    }
+
     public void insertUser(User user) {
-        userMapper.insertUser(user);
+        userMapper.register(user);
     }
 
     public void updateUser(User user) {
@@ -36,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getAllUsers() {
         return userMapper.getAllUsers();
+
     }
 
 }

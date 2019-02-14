@@ -10,6 +10,8 @@ import java.util.List;
 public interface UserService {
     User findUserById(String id);
 
+    User queryUserByPhone(String phone);
+
     void insertUser(User user);
 
     void updateUser(User user);

@@ -6,25 +6,45 @@
         <id property="user_id" column="id"/>
         <result property="user_name" column="user_name"/>
         <result property="user_age" column="user_age"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="password" column="password"/>
+        <result property="token" column="token"/>
     </resultMap>
 
+    <!--用户注册-->
+    <insert id="register" parameterType="User" useGeneratedKeys="true" keyProperty="user_id">
+        <!--<selectKey keyProperty="user_id" resultType="int" order="BEFORE">-->
+        <!--select if(max(id) is null, 1, max(id) + 2) as newId from tb_user-->
+        <!--</selectKey>-->
+
+        insert into tb_user (phone,password,token)
+        values (#{phone},#{password},#{token})
+    </insert>
+
+
+    <!-- 根据手机号查询用户 -->
+    <select id="queryUserByPhone" parameterType="String" resultMap="userResult">
+        select * from tb_user where phone=#{phone}
+    </select>
+
+
     <!-- 获取所有学生信息 -->
-    <select id="getAllUsers" resultType="User" resultMap="userResult">
-        select * from tb_user
+    <select id="getAllUsers" resultMap="userResult">
+           select * from tb_user
     </select>
     <!-- 根据主键id查询用户 -->
-    <select id="queryUserById" parameterType="String" resultType="User" resultMap="userResult">
+    <select id="queryUserById" parameterType="String" resultMap="userResult">
         select * from tb_user where id=#{id}
     </select>
 
+    <!--
+        parameterType="User" useGeneratedKeys="true" keyProperty="user_id"
+    -->
     <!--values的key要和实体类映射-->
-    <insert id="insertUser">
-        insert into tb_user (id,user_name,user_age)
-        values (#{user_id,jdbcType=INTEGER}, #{user_name,jdbcType=VARCHAR},#{user_age,jdbcType=VARCHAR})
-    </insert>
+
 
     <!--TODO  为什么mapper.java对应的参数不能是拆开的，要对象-->
-    <update id="updateUser">insertUser
+    <update id="updateUser">
         update tb_user set user_name=#{user_name,jdbcType=VARCHAR}
         where id=#{user_id,jdbcType=INTEGER}
     </update>

@@ -10,11 +10,15 @@ public interface UserMapper {
 
     User queryUserById(String id);
 
-    void insertUser(User user);
+    User queryUserByPhone(String phone);
+
+    void register(User user);
 
     void updateUser(User user);
 
     void deleteUser(String id);
 
     List<User> getAllUsers();
+
+
 }

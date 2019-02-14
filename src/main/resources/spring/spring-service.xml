@@ -1,26 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/tx
-	http://www.springframework.org/schema/tx/spring-tx.xsd">
-	<!-- 扫描service包下所有使用注解的类型 -->
-	<context:component-scan base-package="example.service" />
-	<!-- 商品管理的service -->
-	<bean id="UserService" class="example.service.impl.UserServiceImpl"/>
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	 http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd"
+>
+    <!-- 扫描service包下所有使用注解的类型 -->
+    <context:component-scan base-package="example.service"/>
+    <!-- service -->
+    <bean id="UserService" class="example.service.impl.UserServiceImpl"/>
 
-	<!-- 配置事务管理器 -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<!-- 注入数据库连接池 -->
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+ <!--   &lt;!&ndash; 配置事务管理器 &ndash;&gt;
+    <bean id="dataSourceTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        &lt;!&ndash; 注入数据库连接池 &ndash;&gt;
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 
-	<!-- 配置基于注解的声明式事务 -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
+    &lt;!&ndash;  &lt;!&ndash; 配置基于注解的声明式事务 &ndash;&gt;
+      <tx:annotation-driven transaction-manager="transactionManager"/>&ndash;&gt;
+
+
+    &lt;!&ndash; 通知 &ndash;&gt;
+    <tx:advice id="txAdvice" transaction-manager="dataSourceTransactionManager">
+        <tx:attributes>
+            &lt;!&ndash; 传播行为 &ndash;&gt;
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="query*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    &lt;!&ndash; aop &ndash;&gt;
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* example.service.impl.*.*(..))"/>
+    </aop:config>-->
+
 </beans>
